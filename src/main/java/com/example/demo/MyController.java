@@ -9,7 +9,7 @@ public class MyController {
 
     @RequestMapping("/")   // /에 대한 url 호출 처리
     public @ResponseBody String root() throws Exception{
-        return "Security (1)";
+        return "Security (2)";
     }
 
     @RequestMapping("/guest/welcome") // /guest에 대한 url 호출 처리
@@ -35,8 +35,4 @@ public class MyController {
     	return "security/loginForm";
     }
     
-    @RequestMapping("/loginError")
-    public String loginError() {
-    	return "security/loginError";
-    }
 }

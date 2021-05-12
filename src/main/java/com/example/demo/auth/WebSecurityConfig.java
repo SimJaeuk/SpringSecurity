@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration               //이 클래스를 스프링 설정으로 사용하겠다는 의미
 @EnableWebSecurity           // 스프링 시큐리티 기능을 활성화 하겠다는 의미
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Autowired
+    public AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override                // url 요청에 대한 허용여부설정, 윗부분이 가장 넓은 범위
     protected void configure(HttpSecurity http) throws Exception {
@@ -23,10 +27,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
  
-        http.formLogin()        //로그인 폼의 url
+        http.formLogin() //로그인 폼의 url
                 .loginPage("/loginForm")
                 .loginProcessingUrl("/j_spring_security_check")
-                .failureUrl("/loginError")       //로그인 실패할 경우 호출
+                //.failureUrl("/loginForm?error")       //로그인 실패할 경우 호출
+                .failureHandler(authenticationFailureHandler) // 우리가 만든 클래스로 에러 처리를 하겠다고 설정
+                //.defaultSuccessUrl("/")
                 .usernameParameter("j_username")
                 .passwordParameter("j_password")
                 .permitAll();
